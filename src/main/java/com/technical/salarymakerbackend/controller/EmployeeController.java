@@ -2,6 +2,8 @@ package com.technical.salarymakerbackend.controller;
 
 import com.technical.salarymakerbackend.domain.model.Employee;
 import com.technical.salarymakerbackend.dto.request.AddNewEmployeeRequest;
+import com.technical.salarymakerbackend.dto.request.SalarySheetRequest;
+import com.technical.salarymakerbackend.dto.response.SalarySheetResponse;
 import com.technical.salarymakerbackend.services.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +32,9 @@ public class EmployeeController {
         return employeeService.getEmployees();
     }
 
-
+    @GetMapping("/salary")
+    public ResponseEntity<SalarySheetResponse> getEmployeesSalary(@RequestBody SalarySheetRequest salarySheetRequest)
+    {
+        return employeeService.getEmployeesSalary(salarySheetRequest);
+    }
 }
