@@ -35,6 +35,7 @@ public class EmployeeService {
         bank.setAccountType(addNewEmployeeRequest.getAcNo());
         bank.setAcHolderName(addNewEmployeeRequest.getAcNo());
         bank.setBankName(addNewEmployeeRequest.getAcNo());
+        bank.setCurrentBalance(0.0);
         bank.setBranchName(addNewEmployeeRequest.getAcNo());
 
         Employee employee = new Employee();
@@ -173,7 +174,8 @@ public class EmployeeService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Bank Ac Not Found");
         }
         Bank bank= optionalBank.get();
-        bank.setCurrentBalance(amount);
+        double currentBalance = Double.valueOf(bank.getCurrentBalance()) + Double.valueOf(amount);
+        bank.setCurrentBalance(currentBalance);
         bankRepository.save(bank);
     }
 
@@ -185,7 +187,7 @@ public class EmployeeService {
         }
         Bank bank= optionalBank.get();
         double currentBalance =Double.valueOf(bank.getCurrentBalance()) - Double.valueOf(amount);
-        bank.setCurrentBalance(String.valueOf(currentBalance));
+        bank.setCurrentBalance(currentBalance);
         bankRepository.save(bank);
     }
 
@@ -202,7 +204,7 @@ public class EmployeeService {
         bankAccountDetailsResponse.setAcHolderName(bank.getAcHolderName());
         bankAccountDetailsResponse.setBankName(bank.getBankName());
         bankAccountDetailsResponse.setBranchName(bank.getBranchName());
-        bankAccountDetailsResponse.setCurrentBalance(bank.getCurrentBalance());
+        bankAccountDetailsResponse.setCurrentBalance(Double.valueOf(bank.getCurrentBalance()));
 
         return new ResponseEntity(bankAccountDetailsResponse,HttpStatus.OK);
     }

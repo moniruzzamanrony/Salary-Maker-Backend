@@ -9,7 +9,7 @@ public class BankAccountDetailsResponse {
     private String accountNo;
     private String acHolderName;
     private String accountType;
-    private String currentBalance;
+    private Double currentBalance;
     private String bankName;
     private String branchName;
 

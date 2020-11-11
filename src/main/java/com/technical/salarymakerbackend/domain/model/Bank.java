@@ -7,7 +7,6 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -21,21 +20,17 @@ public class Bank {
     @Size(min = 4,max = 20)
     private String accountNo;
 
-    @NotNull
-    @Size(min = 4,max = 20)
+
     private String acHolderName;
 
-    @NotNull
-    @Size(min = 4,max = 20)
+
     private String accountType;
 
-    private String currentBalance;
+    private Double currentBalance;
 
-    @NotNull
-    @Size(min = 4,max = 20)
+
     private String bankName;
 
-    @NotNull
-    @Size(min = 4,max = 20)
+
     private String branchName;
 }

@@ -8,7 +8,6 @@ import com.technical.salarymakerbackend.services.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.EntityResponse;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class EmployeeController {
         return employeeService.getEmployees();
     }
 
-    @GetMapping("/salary")
+    @PostMapping("/salary")
     public ResponseEntity<SalarySheetResponse> getEmployeesSalary(@RequestBody SalarySheetRequest salarySheetRequest)
     {
         return employeeService.getEmployeesSalary(salarySheetRequest);
