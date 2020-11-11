@@ -151,8 +151,8 @@ public class EmployeeService {
 
     private SalaryResponse getSalaryResponse(String employeeId, String employeeName, String employeeMobileNo, double basicSalary,String acNo) {
 
-        double houseRant = basicSalary + (basicSalary * 0.2);
-        double medicalAllowance = basicSalary + (basicSalary * 0.15);
+        double houseRant = basicSalary * 0.2;
+        double medicalAllowance = basicSalary * 0.15;
         double total = basicSalary+ houseRant + medicalAllowance;
         SalaryResponse salaryResponse = new SalaryResponse();
         salaryResponse.setEmployeeId(employeeId);
