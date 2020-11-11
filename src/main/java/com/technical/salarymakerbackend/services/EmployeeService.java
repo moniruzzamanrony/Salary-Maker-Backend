@@ -72,28 +72,28 @@ public class EmployeeService {
             System.out.println(employee.getGradeOfEmployee().toLowerCase());
             SalaryResponse salaryResponse = null;
             if (employee.getGradeOfEmployee().toLowerCase().equals("grade 6")) {
-                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(), Double.valueOf(salarySheetRequest.getBasicSalary()),employee.getBank().getAccountNo());
+                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(), Double.valueOf(salarySheetRequest.getBasicSalary()), employee.getBank().getAccountNo());
 
                 salaryResponseSixList.add(salaryResponse);
             } else if (employee.getGradeOfEmployee().toLowerCase().equals("grade 5")) {
                 double mySalary = Double.valueOf(salarySheetRequest.getBasicSalary()) + (5000 * (6 - Double.valueOf(employee.getGradeOfEmployee().substring(employee.getGradeOfEmployee().length() - 1))));
-                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(), mySalary,employee.getBank().getAccountNo());
+                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(), mySalary, employee.getBank().getAccountNo());
                 salaryResponseFiveList.add(salaryResponse);
             } else if (employee.getGradeOfEmployee().toLowerCase().equals("grade 4")) {
                 double mySalary = Double.valueOf(salarySheetRequest.getBasicSalary()) + (5000 * (6 - Double.valueOf(employee.getGradeOfEmployee().substring(employee.getGradeOfEmployee().length() - 1))));
-                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(), mySalary,employee.getBank().getAccountNo());
+                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(), mySalary, employee.getBank().getAccountNo());
                 salaryResponseFourList.add(salaryResponse);
             } else if (employee.getGradeOfEmployee().toLowerCase().equals("grade 3")) {
                 double mySalary = Double.valueOf(salarySheetRequest.getBasicSalary()) + (5000 * (6 - Double.valueOf(employee.getGradeOfEmployee().substring(employee.getGradeOfEmployee().length() - 1))));
-                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(), mySalary,employee.getBank().getAccountNo());
+                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(), mySalary, employee.getBank().getAccountNo());
                 salaryResponseThreeList.add(salaryResponse);
             } else if (employee.getGradeOfEmployee().toLowerCase().equals("grade 2")) {
                 double mySalary = Double.valueOf(salarySheetRequest.getBasicSalary()) + (5000 * (6 - Double.valueOf(employee.getGradeOfEmployee().substring(employee.getGradeOfEmployee().length() - 1))));
-                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(),mySalary,employee.getBank().getAccountNo());
+                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(), mySalary, employee.getBank().getAccountNo());
                 salaryResponseTwoList.add(salaryResponse);
             } else if (employee.getGradeOfEmployee().toLowerCase().equals("grade 1")) {
                 double mySalary = Double.valueOf(salarySheetRequest.getBasicSalary()) + (5000 * (6 - Double.valueOf(employee.getGradeOfEmployee().substring(employee.getGradeOfEmployee().length() - 1))));
-                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(), mySalary,employee.getBank().getAccountNo());
+                salaryResponse = getSalaryResponse(employee.getEmployeeId(), employee.getEmployeeName(), employee.getEmployeeMobileNo(), mySalary, employee.getBank().getAccountNo());
                 salaryResponseOneList.add(salaryResponse);
             }
             totalPaidSalary = totalPaidSalary + salaryResponse.getTotalSalary();
@@ -130,26 +130,27 @@ public class EmployeeService {
         sheetResponseForOne.setSalary(salaryResponseOneList);
         sheetResponseList.add(sheetResponseForOne);
 
+        addBalanceInBank("42885412", String.valueOf(getCurrentBalance("42885412") - totalPaidSalary));
+
         SalarySheetResponse salarySheetResponse = new SalarySheetResponse();
         salarySheetResponse.setMonthAndYear(salarySheetRequest.getDateAndYear());
-        salarySheetResponse.setTotalPaidSalary(String.valueOf(Utility.format(totalPaidSalary)));
+        salarySheetResponse.setTotalPaidSalary(Utility.format(totalPaidSalary));
+        salarySheetResponse.setRemainBankBalance(getCurrentBalance("42885412"));
         salarySheetResponse.setSheet(sheetResponseList);
 
-        addBalanceInBank("42885412",String.valueOf(getCurrentBalance("42885412") - totalPaidSalary));
 
-        return new ResponseEntity(salarySheetResponse,HttpStatus.OK);
+        return new ResponseEntity(salarySheetResponse, HttpStatus.OK);
     }
 
     public double getCurrentBalance(String acNo) {
-       Optional<Bank> bankOptional= bankRepository.findById(acNo);
-       if(!bankOptional.isPresent())
-       {
-           throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Bank Ac Not Found");
-       }
-       return Double.valueOf(bankOptional.get().getCurrentBalance());
+        Optional<Bank> bankOptional = bankRepository.findById(acNo);
+        if (!bankOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bank Ac Not Found");
+        }
+        return Double.valueOf(bankOptional.get().getCurrentBalance());
     }
 
-    private SalaryResponse getSalaryResponse(String employeeId, String employeeName, String employeeMobileNo, double basicSalary,String acNo) {
+    private SalaryResponse getSalaryResponse(String employeeId, String employeeName, String employeeMobileNo, double basicSalary, String acNo) {
 
         double houseRant = Utility.format(basicSalary * 0.2);
         double medicalAllowance = Utility.format(basicSalary * 0.15);
@@ -162,42 +163,39 @@ public class EmployeeService {
         salaryResponse.setHouseRant(houseRant);
         salaryResponse.setMedicalAllowance(medicalAllowance);
         salaryResponse.setTotalSalary(total);
-        addBalanceInBank(acNo,String.valueOf(total));
-        withdrawBalanceInBank("42885412",String.valueOf(total));
+        addBalanceInBank(acNo, String.valueOf(total));
+        withdrawBalanceInBank("42885412", String.valueOf(total));
         return salaryResponse;
     }
 
-    public void addBalanceInBank(String acNo,String amount) {
-        Optional<Bank> optionalBank=bankRepository.findById(acNo);
-        if(!optionalBank.isPresent())
-        {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Bank Ac Not Found");
+    public void addBalanceInBank(String acNo, String amount) {
+        Optional<Bank> optionalBank = bankRepository.findById(acNo);
+        if (!optionalBank.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bank Ac Not Found");
         }
-        Bank bank= optionalBank.get();
+        Bank bank = optionalBank.get();
         double currentBalance = Utility.format(Double.valueOf(bank.getCurrentBalance()) + Double.valueOf(amount));
         bank.setCurrentBalance(currentBalance);
         bankRepository.save(bank);
     }
 
-    private void withdrawBalanceInBank(String acNo,String amount) {
-        Optional<Bank> optionalBank=bankRepository.findById(acNo);
-        if(!optionalBank.isPresent())
-        {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Bank Ac Not Found");
+    private void withdrawBalanceInBank(String acNo, String amount) {
+        Optional<Bank> optionalBank = bankRepository.findById(acNo);
+        if (!optionalBank.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bank Ac Not Found");
         }
-        Bank bank= optionalBank.get();
+        Bank bank = optionalBank.get();
         double currentBalance = Utility.format(Double.valueOf(bank.getCurrentBalance()) - Double.valueOf(amount));
         bank.setCurrentBalance(currentBalance);
         bankRepository.save(bank);
     }
 
     public ResponseEntity<BankAccountDetailsResponse> getMyAccountDetails(String acNo) {
-        Optional<Bank> optionalBank=bankRepository.findById(acNo);
-        if(!optionalBank.isPresent())
-        {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Bank Ac Not Found");
+        Optional<Bank> optionalBank = bankRepository.findById(acNo);
+        if (!optionalBank.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bank Ac Not Found");
         }
-        Bank bank= optionalBank.get();
+        Bank bank = optionalBank.get();
         BankAccountDetailsResponse bankAccountDetailsResponse = new BankAccountDetailsResponse();
         bankAccountDetailsResponse.setAccountNo(bank.getAccountNo());
         bankAccountDetailsResponse.setAccountType(bank.getAccountType());
@@ -206,6 +204,6 @@ public class EmployeeService {
         bankAccountDetailsResponse.setBranchName(bank.getBranchName());
         bankAccountDetailsResponse.setCurrentBalance(Double.valueOf(bank.getCurrentBalance()));
 
-        return new ResponseEntity(bankAccountDetailsResponse,HttpStatus.OK);
+        return new ResponseEntity(bankAccountDetailsResponse, HttpStatus.OK);
     }
 }

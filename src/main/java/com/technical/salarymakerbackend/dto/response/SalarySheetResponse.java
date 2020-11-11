@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 public class SalarySheetResponse {
     private String monthAndYear;
-    private String totalPaidSalary;
+    private double totalPaidSalary;
+    private double remainBankBalance;
     private List<SheetResponse> sheet;
 }
