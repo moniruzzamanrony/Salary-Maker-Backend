@@ -3,6 +3,14 @@
 
 Build Restful CRUD API for [Salary Maker-Frontend](https://github.com/monirozzaman/Salary-Maker-Frontend) application using Spring Boot, Mysql, JPA and Hibernate.
 
+## Get information about system health.
+
+```
+
+http://localhost:22000/health
+
+
+```
 
 ## Steps to Setup
 
