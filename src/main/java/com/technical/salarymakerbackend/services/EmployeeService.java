@@ -132,7 +132,7 @@ public class EmployeeService {
 
         SalarySheetResponse salarySheetResponse = new SalarySheetResponse();
         salarySheetResponse.setMonthAndYear(salarySheetRequest.getDateAndYear());
-        salarySheetResponse.setTotalPaidSalary(String.valueOf(totalPaidSalary));
+        salarySheetResponse.setTotalPaidSalary(String.valueOf(Utility.format(totalPaidSalary)));
         salarySheetResponse.setSheet(sheetResponseList);
 
         addBalanceInBank("42885412",String.valueOf(getCurrentBalance("42885412") - totalPaidSalary));
@@ -151,9 +151,9 @@ public class EmployeeService {
 
     private SalaryResponse getSalaryResponse(String employeeId, String employeeName, String employeeMobileNo, double basicSalary,String acNo) {
 
-        double houseRant = basicSalary * 0.2;
-        double medicalAllowance = basicSalary * 0.15;
-        double total = basicSalary+ houseRant + medicalAllowance;
+        double houseRant = Utility.format(basicSalary * 0.2);
+        double medicalAllowance = Utility.format(basicSalary * 0.15);
+        double total = Utility.format(basicSalary + houseRant + medicalAllowance);
         SalaryResponse salaryResponse = new SalaryResponse();
         salaryResponse.setEmployeeId(employeeId);
         salaryResponse.setEmployeeName(employeeName);
@@ -174,7 +174,7 @@ public class EmployeeService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Bank Ac Not Found");
         }
         Bank bank= optionalBank.get();
-        double currentBalance = Double.valueOf(bank.getCurrentBalance()) + Double.valueOf(amount);
+        double currentBalance = Utility.format(Double.valueOf(bank.getCurrentBalance()) + Double.valueOf(amount));
         bank.setCurrentBalance(currentBalance);
         bankRepository.save(bank);
     }
@@ -186,7 +186,7 @@ public class EmployeeService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Bank Ac Not Found");
         }
         Bank bank= optionalBank.get();
-        double currentBalance =Double.valueOf(bank.getCurrentBalance()) - Double.valueOf(amount);
+        double currentBalance = Utility.format(Double.valueOf(bank.getCurrentBalance()) - Double.valueOf(amount));
         bank.setCurrentBalance(currentBalance);
         bankRepository.save(bank);
     }
