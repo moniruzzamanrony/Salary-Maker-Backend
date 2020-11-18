@@ -28,7 +28,7 @@ public class DataLoader implements ApplicationRunner {
         companyAC.setAcHolderName("IT Software Limited");
         companyAC.setBankName("Dutch Bangla Bank");
         companyAC.setBranchName("Savar Branch");
-        companyAC.setCurrentBalance(120000000.0);
+        companyAC.setCurrentBalance(10000000.0);
         bankRepository.saveAndFlush(companyAC);
 
         Bank bank11 = new Bank();

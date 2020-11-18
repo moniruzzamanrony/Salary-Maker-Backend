@@ -129,17 +129,22 @@ public class EmployeeService {
         sheetResponseForOne.setGrade("1");
         sheetResponseForOne.setSalary(salaryResponseOneList);
         sheetResponseList.add(sheetResponseForOne);
+        System.out.println("-----" + String.valueOf(totalPaidSalary));
+        if (getCurrentBalance("42885412") >= totalPaidSalary) {
+            withdrawBalanceInBank("42885412", String.valueOf(totalPaidSalary));
+            /// addBalanceInBank("42885412", String.valueOf(getCurrentBalance("42885412") - totalPaidSalary));
 
-        addBalanceInBank("42885412", String.valueOf(getCurrentBalance("42885412") - totalPaidSalary));
-
-        SalarySheetResponse salarySheetResponse = new SalarySheetResponse();
-        salarySheetResponse.setMonthAndYear(salarySheetRequest.getDateAndYear());
-        salarySheetResponse.setTotalPaidSalary(Utility.format(totalPaidSalary));
-        salarySheetResponse.setRemainBankBalance(getCurrentBalance("42885412"));
-        salarySheetResponse.setSheet(sheetResponseList);
+            SalarySheetResponse salarySheetResponse = new SalarySheetResponse();
+            salarySheetResponse.setMonthAndYear(salarySheetRequest.getDateAndYear());
+            salarySheetResponse.setTotalPaidSalary(Utility.format(totalPaidSalary));
+            salarySheetResponse.setRemainBankBalance(getCurrentBalance("42885412"));
+            salarySheetResponse.setSheet(sheetResponseList);
 
 
-        return new ResponseEntity(salarySheetResponse, HttpStatus.OK);
+            return new ResponseEntity(salarySheetResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity(null, HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     public double getCurrentBalance(String acNo) {
@@ -164,7 +169,8 @@ public class EmployeeService {
         salaryResponse.setMedicalAllowance(medicalAllowance);
         salaryResponse.setTotalSalary(total);
         addBalanceInBank(acNo, String.valueOf(total));
-        withdrawBalanceInBank("42885412", String.valueOf(total));
+        System.out.println("-----" + String.valueOf(total));
+
         return salaryResponse;
     }
 
